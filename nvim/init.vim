@@ -15,9 +15,9 @@ set title
 
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-   let g:deoplete#enable_at_startup = 1
-   inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"    let g:deoplete#enable_at_startup = 1
+"    inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 Plug 'tomasr/molokai'
 Plug 'sheerun/vim-polyglot'
