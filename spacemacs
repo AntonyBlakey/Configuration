@@ -168,24 +168,22 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font (cond ((eq system-type 'windows-nt)
-                                    '("Consolas"
-                                      :size 13
-                                      :weight normal
-                                      :width normal
-                                      :powerline-scale 1.2))
-                                   ((eq system-type 'darwin)
-                                    '("Source Code Pro"
-                                      :size 13
-                                      :weight normal
-                                      :width normal
-                                      :powerline-scale 1.2))
-                                   ((eq system-type 'gnu/linux)
-                                    '("DejaVu Sans Mono"
-                                      :size 11
-                                      :weight normal
-                                      :width normal
-                                      :powerline-scale 1.2)))
+   dotspacemacs-default-font (pcase system-type
+                               ('windows-nt '("Consolas"
+                                              :size 13
+                                              :weight normal
+                                              :width normal
+                                              :powerline-scale 1.2))
+                               ('darwin '("Source Code Pro"
+                                          :size 12
+                                          :weight normal
+                                          :width normal
+                                          :powerline-scale 1.2))
+                               ('gnu/linux '("DejaVu Sans Mono"
+                                             :size 11
+                                             :weight normal
+                                             :width normal
+                                             :powerline-scale 1.2)))
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
