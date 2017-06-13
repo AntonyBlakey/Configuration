@@ -9,7 +9,7 @@ set incsearch
 set ignorecase
 set smartcase
 map <CR> :noh<CR>
-set cursorline
+" set cursorline
 " set cursorcolumn
 set title
 
@@ -19,6 +19,7 @@ call plug#begin('~/.config/nvim/plugged')
 "    let g:deoplete#enable_at_startup = 1
 "    inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
+Plug 'lifepillar/vim-solarized8'
 Plug 'tomasr/molokai'
 Plug 'sheerun/vim-polyglot'
 
@@ -60,6 +61,5 @@ Plug 'powerman/vim-plugin-AnsiEsc'
 
 call plug#end()
 
-set background=dark
 syntax enable
-colorscheme molokai
+colorscheme solarized8_light
