@@ -2,149 +2,65 @@ alias sed=gsed
 
 ####### ZGEN
 
-source "${HOME}/.zgen/zgen.zsh"
+#POWERLEVEL9K_MODE='awesome-fontconfig'
+#POWERLEVEL9K_MODE='awesome-patched'
+POWERLEVEL9K_MODE='nerdfont-complete'
 
-if ! zgen saved; then
-    zgen oh-my-zsh
-    zgen oh-my-zsh plugins/git
-    zgen oh-my-zsh plugins/gitignore
-    zgen oh-my-zsh plugins/brew
-    zgen oh-my-zsh plugins/compleat
-    zgen oh-my-zsh plugins/osx
-    zgen oh-my-zsh plugins/vi-mode
-    zgen load Tarrasch/zsh-autoenv
-    zgen load zsh-users/zsh-syntax-highlighting
-    zgen load bhilburn/powerlevel9k powerlevel9k
-    zgen save
-fi
+source "${HOME}/.zgen/zgen.zsh"
 
 how_colours() {
   for code ({000..255}) print -P -- "$code: %F{$code} First this %K{black} And this %K{white} And this %k%f%K{$code}%F{black} And this %F{white} And this %f%k"
 }
 
-POWERLEVEL9K_PROMPT_ON_NEWLINE=false
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context vcs status)
-POWERLEVEL9K_DISABLE_RPROMPT=true
-POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="\n"
-POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=""
-POWERLEVEL9K_STATUS_VERBOSE=true
-export DEFAULT_USER="$USER"
-
-######## iTerm2 Cursor Shape (Part 1)
-
-function print_dcs
-{
-  print -n -- "\EP$1;\E$2\E\\"
-}
-
-function set_cursor_shape
-{
-  if [ -n "$TMUX" ]; then
-    # tmux will only forward escape sequences to the terminal if surrounded by a DCS sequence
-    print_dcs tmux "\E]50;CursorShape=$1\C-G"
-  else
-    print -n -- "\E]50;CursorShape=$1\C-G"
-  fi
-}
-
-function set_cursor_shape_for_keymap
-{
-  case $KEYMAP in
-    vicmd)
-      set_cursor_shape 0 # block cursor
-      ;;
-    viins|main)
-      set_cursor_shape 1 # line cursor
-      ;;
-  esac
-  zle reset-prompt
-  zle -R
-}
-
-######## TMUX
-
-if [ -n "$TMUX_PANE" ]; then
-
-    TMUX_STATUS_PREFIX="TMUX_STATUS_$(echo $TMUX_PANE | tr -d %)"
-
-    function tmux_set_status {
-      tmux set-env -g "${TMUX_STATUS_PREFIX}_$1" "$2"
-    }
-
-    function tmux_status_nvm_version {
-      [[ ! $(type nvm) =~ 'nvm is a shell function'* ]] && tmux_set_status "nvm" "" && return
-      local node_version=$(nvm current)
-      [[ -z "${node_version}" ]] || [[ ${node_version} = "none" ]] && tmux_set_status "nvm" "" && return
-      local nvm_default=$(cat $NVM_DIR/alias/default)
-      [[ "$node_version" =~ "$nvm_default" ]] && tmux_set_status "nvm" "" && return
-
-      tmux_set_status "nvm" " ${node_version:1} "
-    }
-
-    function tmux_status_pwd {
-      trunc_symbol="…"
-      dir=${PWD##*/}
-      local max_len=40
-      max_len=$(( ( max_len < ${#dir} ) ? ${#dir} : max_len ))
-      ttcwd=${PWD/#$HOME/\~}
-      pwdoffset=$(( ${#ttcwd} - max_len ))
-      if [ ${pwdoffset} -gt "0" ]; then
-        ttcwd=${ttcwd:$pwdoffset:$max_len}
-        ttcwd=${trunc_symbol}/${ttcwd#*/}
-      fi
-      tmux_set_status "pwd" "$ttcwd"
-    }
-
-    function tmux_status_vi_mode {
-      case $KEYMAP in
-        (vicmd) tmux_set_status "vi_normal" " CMD " && tmux_set_status "vi_insert" ""      ;; 
-        (*)     tmux_set_status "vi_normal" ""      && tmux_set_status "vi_insert" " INS " ;; 
-      esac  
-    }
-
-    function tmux_status_desk {
-      if [[ -n "$DESK_ENV" ]]; then
-        tmux_set_status "desk" " ${${DESK_ENV##*/}%.sh} "
-      else
-        tmux_set_status "desk" ""
-      fi
-    }
-
-    function zle-keymap-select {
-      set_cursor_shape_for_keymap
-      tmux_status_vi_mode
-      tmux refresh-client -S
-    }
-
-    function zle-line-init {
-      set_cursor_shape_for_keymap
-      tmux_status_vi_mode
-      tmux_status_pwd
-      tmux_status_nvm_version
-      tmux_status_desk
-      tmux refresh-client -S
-    }
-
-else
-
-    function zle-keymap-select zle-line-init
-    {
-        set_cursor_shape_for_keymap
-    }
-
+if ! zgen saved; then
+    zgen oh-my-zsh
+    zgen oh-my-zsh plugins/git
+    zgen oh-my-zsh plugins/command-not-found
+    zgen load zsh-users/zsh-syntax-highlighting
+    zgen load bhilburn/powerlevel9k powerlevel9k
+    zgen load zlsun/solarized-man
+    zgen save
 fi
 
-######## iTerm2 Cursor Shape (Part 2)
-
-zle -N zle-line-init
-zle -N zle-keymap-select
-
-function zle-line-finish
-{
-    set_cursor_shape 0 # block cursor
-}
-
-zle -N zle-line-finish
+#POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+#POWERLEVEL9K_SHORTEN_DELIMITER=""
+#POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
+POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=''
+POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=''
+POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR=''
+#POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="%F{blue}\u256D\u2500\u2500%F{white}"
+#POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{blue}\u2570\u2500\u2524%F{white} "
+POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
+POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{yellow}>>%F{white} "
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status context dir)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(vcs nvm pyenv rvm time os_icon_joined)
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="clear"
+POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND="clear"
+POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="yellow"
+POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="yellow"
+POWERLEVEL9K_OS_ICON_BACKGROUND="clear"
+POWERLEVEL9K_OS_ICON_FOREGROUND="yellow"
+POWERLEVEL9K_DIR_HOME_BACKGROUND="clear"
+POWERLEVEL9K_DIR_HOME_FOREGROUND="cyan"
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="clear"
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND="cyan"
+POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND="clear"
+POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_FOREGROUND="red"
+POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="white"
+POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="black"
+POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND="red"
+POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND="white"
+POWERLEVEL9K_CONTEXT_BACKGROUND="clear"
+POWERLEVEL9K_STATUS_OK=false
+POWERLEVEL9K_STATUS_ERROR_BACKGROUND="clear"
+POWERLEVEL9K_STATUS_ERROR_FOREGROUND="red"
+POWERLEVEL9K_TIME_BACKGROUND="clear"
+POWERLEVEL9K_TIME_FOREGROUND="cyan"
+POWERLEVEL9K_APPLE_ICON=$'\uF8FF'
+DEFAULT_USER=$USER
 
 ######## OS Paths
 
@@ -154,34 +70,19 @@ eval $(/usr/libexec/path_helper -s)
 
 [ -f ~/.homebrew-github-token.txt ] && export HOMEBREW_GITHUB_API_TOKEN=$(cat ~/.homebrew-github-token.txt)
 
-######## Node Version Manager
+######## Neovim
 
-export NVM_DIR="/Users/antony/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-######## Vagrant
-
-export VAGRANT_HOME=/Volumes/Debussy/vagrant.d
-
-######## Java
-
-export JAVA_HOME=$(/usr/libexec/java_home)
-path=( $JAVA_HOME/bin $path )
-
-######## VIM
-
-export EDITOR="vim"
-
-######## Emacs
-
-alias ec="emacsclient --no-wait"
-alias ecw="emacsclient"
-alias ecn="emacsclient --no-wait --create-frame --frame-parameters='((width . 150) (height . 80))'"
-
-######## Cincom
-
-#export VW_CLI_ROOT=/Volumes/Debussy/Offloaded/Users/antony/Development/Cincom/VisualWorks
-#alias cincom='cd $VW_CLI_ROOT'
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
+if [ -n "$NVIM_LISTEN_ADDRESS" ]; then
+	export VISUAL="nvr -cc split --remote-wait +'set bufhidden=wipe'"
+	alias vi=nvr
+	alias vim=nvr
+	alias nvim=nvr
+else
+	export VISUAL=nvim
+	alias vi=nvim
+	alias vim=nvim
+fi
 
 ######## Local Applications
 
@@ -191,21 +92,3 @@ path=( ~/local/sbin  ~/local/bin  $path )
 ######## iTerm2
 
 [ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
-
-######## Jump Integration
-
-eval "$(jump shell zsh)"
-
-######## OPAM
-
-. ~/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
-
-####### Fuzzy Finder
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-######## Hook for desk activation
-
-[ -n "$DESK_ENV" ] && source "$DESK_ENV" || true
-
-eval $(thefuck --alias)
