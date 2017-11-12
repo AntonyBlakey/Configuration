@@ -1,4 +1,5 @@
-alias sed=gsed
+[[ $OS = "Linux" ]] && alias gsed=sed
+[[ $OS = "OSX" ]] && alias sed=gsed
 
 ####### ZGEN
 
@@ -64,7 +65,7 @@ DEFAULT_USER=$USER
 
 ######## OS Paths
 
-eval $(/usr/libexec/path_helper -s)
+[[ $OS = "OSX" ]] && eval $(/usr/libexec/path_helper -s)
 
 ######## Homebrew
 
@@ -91,4 +92,4 @@ path=( ~/local/sbin  ~/local/bin  $path )
 
 ######## iTerm2
 
-[ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
+[[ $OS = "OSX" ]] && [ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
