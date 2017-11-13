@@ -77,6 +77,15 @@ tnoremap <M-j> <C-\><C-n><C-w>j
 tnoremap <M-k> <C-\><C-n><C-w>k
 tnoremap <M-l> <C-\><C-n><C-w>l
 
+nnoremap <M-H> :tabprevious<CR>
+nnoremap <M-L> :tabnext<CR>
+inoremap <M-H> :tabprevious<CR>
+inoremap <M-L> :tabnext<CR>
+vnoremap <M-H> :tabprevious<CR>
+vnoremap <M-L> :tabnext<CR>
+tnoremap <M-H> <C-\><C-n>:tabprevious<CR>
+tnoremap <M-L> <C-\><C-n>:tabnext<CR>
+
 if has("win32")
         set shell=powershell
         set shellcmdflag=\ -NoLogo\ -NoProfile\ -ExecutionPolicy\ RemoteSigned\ -Command
